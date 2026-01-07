@@ -52,7 +52,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.count--
 		}
 	}
-
+  m.input, cmd = m.input.Update(msg)
 	return m, nil
 }
 
