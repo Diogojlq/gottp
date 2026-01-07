@@ -60,8 +60,12 @@ func (m model) View() string {
 		"",
 		"↑ / ↓ to change • q to quit",
 	)
+	
+	box := boxStyle.
+		Width(m.width - 4).
+		Height(m.height - 2)
 
-	return boxStyle.Render(content)
+	return box.Render(content)
 }
 
 func main() {
