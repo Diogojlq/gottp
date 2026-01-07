@@ -34,6 +34,8 @@ func (m model) Init() tea.Cmd {
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	var cmd tea.Cmd
+
 	switch msg := msg.(type) {
   
 	case tea.WindowSizeMsg:
@@ -53,7 +55,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 	}
   m.input, cmd = m.input.Update(msg)
-	return m, nil
+	return m, cmd
 }
 
 var boxStyle = lipgloss.NewStyle().
