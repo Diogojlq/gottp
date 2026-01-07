@@ -25,6 +25,7 @@ func initialModel() model {
 
 	return model{
 		count: 0,
+		input: ti,
 	}
 }
 
