@@ -10,6 +10,8 @@ import (
 
 type model struct {
 	count int
+	width int
+	height int
 }
 
 func initialModel() model {
