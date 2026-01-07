@@ -43,13 +43,13 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 var boxStyle = lipgloss.NewStyle().
 	Border(lipgloss.RoundedBorder()).
-	BorderForeground(lipgloss.Color("62")).
+	BorderForeground(lipgloss.Color("67")).
 	Padding(1, 2)
 
 func (m model) View() string {
 	content := lipgloss.JoinVertical(
 		lipgloss.Left,
-		"🍵 Bubble Tea App",
+		"API testing",
 		fmt.Sprintf("Count: %d", m.count),
 		"",
 		"↑ / ↓ to change • q to quit",
