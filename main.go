@@ -18,6 +18,7 @@ type model struct {
 
 func initialModel() model {
 	ti := textinput.New()
+	ti.Placeholder = "Enter URL..."
 	return model{
 		count: 0,
 	}
