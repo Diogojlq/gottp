@@ -1,10 +1,11 @@
 package main
-	
+
 import (
 	"fmt"
 	"os"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 )
 
 type model struct {
@@ -12,7 +13,9 @@ type model struct {
 }
 
 func initialModel() model {
-	return model{count: 0}
+	return model{
+		count: 0,
+	}
 }
 
 func (m model) Init() tea.Cmd {
@@ -29,6 +32,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		case "up":
 			m.count++
+
 		case "down":
 			m.count--
 		}
@@ -37,11 +41,21 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
+var boxStyle = lipgloss.NewStyle().
+	Border(lipgloss.RoundedBorder()).
+	BorderForeground(lipgloss.Color("62")).
+	Padding(1, 2)
+
 func (m model) View() string {
-	return fmt.Sprintf(
-		"Bubble Tea started 🍵\n\nCount: %d\n\n↑ / ↓ to change\nq to quit\n",
-		m.count,
+	content := lipgloss.JoinVertical(
+		lipgloss.Left,
+		"🍵 Bubble Tea App",
+		fmt.Sprintf("Count: %d", m.count),
+		"",
+		"↑ / ↓ to change • q to quit",
 	)
+
+	return boxStyle.Render(content)
 }
 
 func main() {
