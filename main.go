@@ -26,8 +26,9 @@ func initialModel() model {
 	ti.Width = 30
 
 	return model{
-		count: 0,
+
 		input: ti,
+
 	}
 }
 
