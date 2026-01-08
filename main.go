@@ -42,22 +42,27 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
   
 	case tea.WindowSizeMsg:
-	m.width = msg.Width
-	m.height = msg.Height
+		m.width = msg.Width
+		m.height = msg.Height
 	
 	case tea.KeyMsg:
+
 		switch msg.String() {
 		case "q", "ctrl+c":
 			return m, tea.Quit
 
 		case "up":
-			m.count++
-
+			if m.selectedMethod > 0 {
+				m.selectedMethod--
+			}
 		case "down":
-			m.count--
+			if m.selectedMethod < len(m.methods)-1 {
+				m.selectedMethod++
+			}
 		}
 	}
-  m.input, cmd = m.input.Update(msg)
+
+  	m.input, cmd = m.input.Update(msg)
 	return m, cmd
 }
 
