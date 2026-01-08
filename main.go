@@ -67,9 +67,6 @@ func (m model) View() string {
 	content := lipgloss.JoinVertical(
 		lipgloss.Left,
 		"API testing",
-		fmt.Sprintf("Count: %d", m.count),
-		"",
-		"",
 		m.input.View(),
 		"↑ / ↓ to change • q to quit",
 	)
