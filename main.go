@@ -26,9 +26,9 @@ func initialModel() model {
 	ti.Width = 30
 
 	return model{
-
 		input: ti,
-
+		methods:        []string{"GET", "POST", "PUT", "DELETE", "PATCH"},
+		selectedMethod: 0,
 	}
 }
 
