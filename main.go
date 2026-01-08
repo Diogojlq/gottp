@@ -10,10 +10,12 @@ import (
 )
 
 type model struct {
-	count int
-	width int
-	height int
-  input  textinput.Model
+	count 	int
+	width 	int
+	height 	int
+  	input   textinput.Model
+	methods []string
+	selectedMethod int
 }
 
 func initialModel() model {
