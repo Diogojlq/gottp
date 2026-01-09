@@ -69,7 +69,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 var boxStyle = lipgloss.NewStyle().
 	Border(lipgloss.NormalBorder()).
-	BorderForeground(lipgloss.Color("189")).
+	BorderForeground(lipgloss.Color("33")).
 	Padding(1, 2)
 
 func (m model) View() string {
