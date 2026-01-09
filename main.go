@@ -83,7 +83,7 @@ func (m model) View() string {
 	mainHeight := m.height - 4
 
 	var methodList strings.Builder
-	methodList.WriteString(lipgloss.NewStyle().Bold(true).Render("Method") + "\n\n")
+	methodList.WriteString(lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("86")).Render("Method") + "\n\n")
 
 	for i, method := range m.methods {
 		if i == m.selectedMethod {
