@@ -60,6 +60,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if m.selectedMethod < len(m.methods)-1 {
 				m.selectedMethod++
 			}
+		case "enter":
+			m.responseBody = "Making request..."
+			return m, m.makeRequest()
 		}
 	}
 
