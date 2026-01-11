@@ -121,6 +121,29 @@ func (m model) View() string {
 	return lipgloss.JoinHorizontal(lipgloss.Top, leftBox, rightBox)
 }
 
+func (m model) makeRequest() tea.Cmd {
+	return func() tea.Msg {
+		client := &http.Client{Timeout: 10 * time.Second}
+		
+		method := m.methods[m.selectedMethod]
+		url := m.input.Value()
+
+		req, err := http.NewRequest(method, url, nil)
+		if err != nil {
+			return errorMsg(err)
+		}
+
+		res, err := client.Do(req)
+		if err != nil {
+			return errorMsg(err)
+		}
+		defer res.Body.Close()
+
+		body, _ := io.ReadAll(res.Body)
+		return httpResponseMsg(string(body))
+	}
+}
+
 
 func main() {
 	p := tea.NewProgram(initialModel())
