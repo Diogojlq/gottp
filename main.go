@@ -126,6 +126,10 @@ func (m model) View() string {
 		Height(mainHeight).
 		Render(leftContent)
 
+	contentStyle := lipgloss.NewStyle().
+        Width(rightWidth - 4).
+        MaxHeight(mainHeight - 4)
+
 	rightContent := lipgloss.JoinVertical(
 		lipgloss.Left,
 		 "Main Area",
