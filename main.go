@@ -9,7 +9,7 @@ import (
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
-  	"github.com/charmbracelet/bubbles/textinput"
+  "github.com/charmbracelet/bubbles/textinput"
 	"github.com/charmbracelet/lipgloss"
 )
 
