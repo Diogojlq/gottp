@@ -26,6 +26,7 @@ type model struct {
 	responseBody   string
 	viewport       viewport.Model
 	ready          bool
+	focusedPanel   string // "methods" ou "response"
 }
 
 type httpResponseMsg string
@@ -43,6 +44,7 @@ func initialModel() model {
 		methods:        []string{"GET", "POST", "PUT", "DELETE"},
 		selectedMethod: 0,
 		responseBody:   "Waiting request...",
+		focusedPanel:   "methods",
 	}
 }
 
@@ -76,30 +78,50 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "q", "ctrl+c":
 			return m, tea.Quit
 
+		// Alt+Left/Right para alternar entre painéis
+		case "alt+left", "alt+h":
+			if m.focusedPanel == "response" {
+				m.focusedPanel = "methods"
+				m.input.Blur()
+			}
+		case "alt+right", "alt+l":
+			if m.focusedPanel == "methods" {
+				m.focusedPanel = "response"
+			}
+
+		// Navegação com setas (independente por painel)
 		case "up":
-			if m.input.Focused() {
-				m.viewport.LineUp(1)
-			} else {
+			if m.focusedPanel == "methods" {
 				if m.selectedMethod > 0 {
 					m.selectedMethod--
 				}
+			} else {
+				m.viewport.LineUp(1)
 			}
 		case "down":
-			if m.input.Focused() {
-				m.viewport.LineDown(1)
-			} else {
+			if m.focusedPanel == "methods" {
 				if m.selectedMethod < len(m.methods)-1 {
 					m.selectedMethod++
 				}
+			} else {
+				m.viewport.LineDown(1)
 			}
 		case "pgup":
-			m.viewport.HalfViewUp()
+			if m.focusedPanel == "response" {
+				m.viewport.HalfViewUp()
+			}
 		case "pgdown":
-			m.viewport.HalfViewDown()
+			if m.focusedPanel == "response" {
+				m.viewport.HalfViewDown()
+			}
 		case "home":
-			m.viewport.GotoTop()
+			if m.focusedPanel == "response" {
+				m.viewport.GotoTop()
+			}
 		case "end":
-			m.viewport.GotoBottom()
+			if m.focusedPanel == "response" {
+				m.viewport.GotoBottom()
+			}
 		case "tab":
 			if m.input.Focused() {
 				m.input.Blur()
@@ -123,9 +145,12 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, nil
 	}
 
-	var vpCmd tea.Cmd
-	m.viewport, vpCmd = m.viewport.Update(msg)
-	cmds = append(cmds, vpCmd)
+	// Só atualiza o viewport quando está focado
+	if m.focusedPanel == "response" {
+		var vpCmd tea.Cmd
+		m.viewport, vpCmd = m.viewport.Update(msg)
+		cmds = append(cmds, vpCmd)
+	}
 
 	var inputCmd tea.Cmd
 	m.input, inputCmd = m.input.Update(msg)
@@ -150,7 +175,11 @@ func (m model) View() string {
 	mainHeight := m.height - 4
 
 	var methodList strings.Builder
-	methodList.WriteString(lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("178")).Render("Method") + "\n\n")
+	methodListTitle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("178")).Render("Method")
+	if m.focusedPanel == "methods" {
+		methodListTitle += " " + lipgloss.NewStyle().Foreground(lipgloss.Color("82")).Render("●")
+	}
+	methodList.WriteString(methodListTitle + "\n\n")
 
 	for i, method := range m.methods {
 		if i == m.selectedMethod {
@@ -166,7 +195,7 @@ func (m model) View() string {
 		"\n",
 		m.input.View(),
 		"\n",
-		"↑↓ methods • PgUp/PgDown scroll • Tab focus • q quit",
+		"↑↓ select • Alt+Right go to response • Enter send • q quit",
 	)
 
 	leftBox := boxStyle.
@@ -176,7 +205,13 @@ func (m model) View() string {
 
 	rightContent := lipgloss.JoinVertical(
 		lipgloss.Left,
-		lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("42")).Render("RESULT:"),
+		func() string {
+			title := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("42")).Render("RESULT:")
+			if m.focusedPanel == "response" {
+				title += " " + lipgloss.NewStyle().Foreground(lipgloss.Color("82")).Render("●")
+			}
+			return title
+		}(),
 		"\n",
 		m.viewport.View(),
 	)
