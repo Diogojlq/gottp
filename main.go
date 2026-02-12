@@ -26,7 +26,7 @@ type model struct {
 	responseBody   string
 	viewport       viewport.Model
 	ready          bool
-	focusedPanel   string // "methods" ou "response"
+	focusedPanel   string
 }
 
 type httpResponseMsg string
@@ -61,8 +61,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.width = msg.Width
 		m.height = msg.Height
 
-		rightWidth := int(float64(m.width)*0.6) - 6 // Ajuste de margem
-		viewHeight := m.height - 10                 // Ajuste de margem vertical
+		rightWidth := int(float64(m.width)*0.6) - 6 
+		viewHeight := m.height - 10                 
 
 		if !m.ready {
 			m.viewport = viewport.New(rightWidth, viewHeight)
@@ -78,7 +78,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "q", "ctrl+c":
 			return m, tea.Quit
 
-		// Alt+Left/Right para alternar entre painéis
 		case "alt+left", "alt+h":
 			if m.focusedPanel == "response" {
 				m.focusedPanel = "methods"
@@ -89,7 +88,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.focusedPanel = "response"
 			}
 
-		// Navegação com setas (independente por painel)
 		case "up":
 			if m.focusedPanel == "methods" {
 				if m.selectedMethod > 0 {
@@ -145,7 +143,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, nil
 	}
 
-	// Só atualiza o viewport quando está focado
 	if m.focusedPanel == "response" {
 		var vpCmd tea.Cmd
 		m.viewport, vpCmd = m.viewport.Update(msg)
